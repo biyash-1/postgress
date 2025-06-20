@@ -23,7 +23,7 @@ const Page = () => {
 
       toast.success("User registered successfully!")
 
-      // Clear form fields
+      
       setUsername("")
       setEmail("")
       setPassword("")
