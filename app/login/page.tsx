@@ -4,10 +4,11 @@ import React from "react";
 import Link from "next/link";
 import toast from 'react-hot-toast';
 import { useState } from "react";
-
+import { useRouter } from 'next/navigation';
 
 const BaseUrl= "http://localhost:3000"
 const page = () => {
+  const router = useRouter();
 const [email,setEmail] = useState("");
   const[password,setPassword] = useState("");
 
@@ -17,6 +18,7 @@ const [email,setEmail] = useState("");
     try{
       const response = await axios.post(`${BaseUrl}/api/login`,formData);
       toast.success("login sucessfully");
+      router.push('/dashboard');
       setEmail("");
       setPassword("");
       
