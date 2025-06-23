@@ -14,6 +14,7 @@ type Task = {
 };
 
 const Page = () => {
+  const[checkedIn,setCheckedIN] = useState(false)
   const [inputValue, setInputValue] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]); 
 
@@ -61,6 +62,24 @@ const Page = () => {
     fetchData();
   }, []); 
 
+ const handleCheck = async (id: number) => {
+    try {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      
+      const updatedStatus = !task.isCompleted;
+      await axios.patch(`/api/todos/${id}`, { isCompleted: updatedStatus });
+      
+      setTasks(tasks.map(t => 
+        t.id === id ? { ...t, isCompleted: updatedStatus } : t
+      ));
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+
+
   return (
     <div className='min-h-screen flex flex-col items-center'>
       <div className="heading">
@@ -78,11 +97,16 @@ const Page = () => {
         <div className='flex flex-col w-1/4 flex-wrap items-center justify-center mt-2 '>
           <ul className='w-[50vh] p-2 '>
             {tasks.map((task) => (
+             
               <li 
                 key={task.id} 
                 className='bg-gray-300 mb-2 rounded p-2 flex gap-2 justify-between'
               >
-                {task.task}
+              <input type="checkbox" onChange={() => handleCheck(task.id)} />
+               
+              <span className={task.isCompleted ? "line-through" : ""}>
+  {task.task}
+</span>
                 <Trash2 
                   className="cursor-pointer" 
                   onClick={() => handleDelete(task.id)} 
