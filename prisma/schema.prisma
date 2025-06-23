@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -17,6 +16,20 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  name      String?
+  username  String?
+  password  String
   createdAt DateTime @default(now())
+
+  // 1-to-many relation: one user can have many tasks
+  tasks Tasks[]
+}
+
+model Tasks {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  isCompleted Boolean  @default(false)
+  task         String 
+  // Foreign key to User
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
